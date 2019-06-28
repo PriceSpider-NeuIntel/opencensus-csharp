@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net46;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks Condition="$(OS) != 'Windows_NT'">netstandard2.0</TargetFrameworks>
+    <Authors>OpenCensus authors</Authors>
+    <PackageIconUrl>https://opencensus.io/images/opencensus-logo.png</PackageIconUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://opencensus.io</PackageProjectUrl>
+    <PackageTags>Tracing;OpenCensus;Management;Monitoring;Jaeger;distributed-tracing</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ApacheThrift" Version="0.12.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OpenCensus.Abstractions\OpenCensus.Abstractions.csproj" />
+  </ItemGroup>
+</Project>
