@@ -13,6 +13,7 @@
         private readonly IExportComponent exportComponent;
 
         private bool isInitialized = false;
+        private JaegerTraceExporterHandler handler;
 
         public JaegerExporter(JaegerExporterOptions options, IExportComponent exportComponent)
         {
@@ -31,7 +32,8 @@
 
                 if (this.exportComponent != null)
                 {
-                    this.exportComponent.SpanExporter.RegisterHandler(ExporterName, new JaegerTraceExporterHandler(this.options));
+                    this.handler = new JaegerTraceExporterHandler(this.options);
+                    this.exportComponent.SpanExporter.RegisterHandler(ExporterName, this.handler);
                 }
             }
         }
@@ -47,6 +49,7 @@
             {
                 if (this.exportComponent != null)
                 {
+                    
                     this.exportComponent.SpanExporter.UnregisterHandler(ExporterName);
                 }
             }
