@@ -4,6 +4,7 @@ namespace OpenCensus.Exporter.Jaeger.Implimentation
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Sockets;
+    using System.Threading;
     using System.Threading.Tasks;
     using OpenCensus.Trace.Export;
     using Thrift.Protocols;
@@ -26,9 +27,14 @@ namespace OpenCensus.Exporter.Jaeger.Implimentation
             this.jaegerAgentUdpBatcher = new JaegerUdpBatcher(options);
         }
 
-        public Task ExportAsync(IEnumerable<ISpanData> spanDataList)
+        public async Task ExportAsync(IEnumerable<ISpanData> spanDataList)
         {
-            throw new NotImplementedException();
+            var jaegerspans = spanDataList.Select(sdl => sdl.ToJaegerSpan());
+
+            foreach(var s in jaegerspans)
+            {
+                await this.jaegerAgentUdpBatcher.AppendAsync(s, CancellationToken.None);
+            }
         }
 
         private void ValidateOptions(JaegerExporterOptions options)
