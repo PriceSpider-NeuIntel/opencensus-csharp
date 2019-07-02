@@ -9,7 +9,8 @@ namespace OpenCensus.Exporter.Jaeger.Implimentation
 
     public class JaegerUdpBatcher : IDisposable
     {
-        private readonly JaegerExporterOptions options;
+        private const int DefaultMaxPacketSize = 65000;
+        private readonly int? maxPacketSize;
         private readonly TCompactProtocol.Factory ProtocolFactory;
         private readonly JaegerThriftClientTransport clientTransport;
         private readonly JaegerThriftClient thriftClient;
@@ -23,9 +24,9 @@ namespace OpenCensus.Exporter.Jaeger.Implimentation
 
         public JaegerUdpBatcher(JaegerExporterOptions options)
         {
-            this.options = options;
+            this.maxPacketSize = options.MaxPacketSize == 0 ? DefaultMaxPacketSize : options.MaxPacketSize;
             this.ProtocolFactory = new TCompactProtocol.Factory();
-            this.clientTransport = new JaegerThriftClientTransport(this.options.AgentHost, this.options.AgentPort.Value);
+            this.clientTransport = new JaegerThriftClientTransport(options.AgentHost, options.AgentPort.Value);
             this.thriftClient = new JaegerThriftClient(this.ProtocolFactory.GetProtocol(this.clientTransport));
             this.process = new Process(options.ServiceName);
             this.processByteSize = GetSize(this.process);
@@ -35,16 +36,16 @@ namespace OpenCensus.Exporter.Jaeger.Implimentation
         public async Task<int> AppendAsync(JaegerSpan span, CancellationToken cancellationToken)
         {
             int spanSize = GetSize(span);
-            if (spanSize > this.options.MaxPacketSize)
+            if (spanSize > this.maxPacketSize)
             {
-                throw new JaegerExporterException($"ThriftSender received a span that was too large, size = {spanSize}, max = {this.options.MaxPacketSize}", null);
+                throw new JaegerExporterException($"ThriftSender received a span that was too large, size = {spanSize}, max = {this.maxPacketSize}", null);
             }
 
             this.batchByteSize += spanSize;
-            if (this.batchByteSize <= this.options.MaxPacketSize)
+            if (this.batchByteSize <= this.maxPacketSize)
             {
                 this.currentBatch.Add(span);
-                if (this.batchByteSize < this.options.MaxPacketSize)
+                if (this.batchByteSize < this.maxPacketSize)
                 {
                     return 0;
                 }
@@ -124,6 +125,7 @@ namespace OpenCensus.Exporter.Jaeger.Implimentation
             {
                 if (disposing)
                 {
+                    this.FlushAsync(CancellationToken.None).Wait();
                     this.thriftClient.Dispose();
                     this.clientTransport.Dispose();
                 }

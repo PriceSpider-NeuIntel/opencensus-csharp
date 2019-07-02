@@ -35,6 +35,8 @@ namespace OpenCensus.Exporter.Jaeger.Implimentation
             {
                 await this.jaegerAgentUdpBatcher.AppendAsync(s, CancellationToken.None);
             }
+
+            await this.jaegerAgentUdpBatcher.FlushAsync(CancellationToken.None);
         }
 
         private void ValidateOptions(JaegerExporterOptions options)

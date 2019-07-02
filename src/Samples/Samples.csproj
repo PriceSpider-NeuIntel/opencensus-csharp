@@ -18,6 +18,7 @@
     <ProjectReference Include="..\OpenCensus\OpenCensus.csproj" />
     <ProjectReference Include="..\OpenCensus.Exporter.Zipkin\OpenCensus.Exporter.Zipkin.csproj" />
     <ProjectReference Include="..\OpenCensus.Exporter.ApplicationInsights\OpenCensus.Exporter.ApplicationInsights.csproj" />
+    <ProjectReference Include="..\OpenCensus.Exporter.Jaeger\OpenCensus.Exporter.Jaeger.csproj" />
   </ItemGroup>
 
 </Project>
