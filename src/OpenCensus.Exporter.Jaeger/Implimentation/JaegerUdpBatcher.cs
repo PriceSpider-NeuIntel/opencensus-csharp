@@ -136,7 +136,7 @@ namespace OpenCensus.Exporter.Jaeger.Implimentation
         }
 
         // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~JaegerAgentUdpBatcher()
+        // ~JaegerUdpBatcher()
         // {
         //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
         //   Dispose(false);

@@ -9,13 +9,6 @@ namespace OpenCensus.Exporter.Jaeger.Implimentation
 
     public partial class JaegerTag : TAbstractBase
     {
-        public string Key { get; set; }
-
-        /// <summary>
-        /// 
-        /// <seealso cref="TagType"/>
-        /// </summary>
-
 
         public JaegerTag()
         {
@@ -27,6 +20,11 @@ namespace OpenCensus.Exporter.Jaeger.Implimentation
             this.VType = vType;
         }
 
+        public string Key { get; set; }
+        /// <summary>
+        /// 
+        /// <seealso cref="TagType"/>
+        /// </summary>
         public JaegerTagType VType { get; set; }
 
         public string VStr { get; set; }
